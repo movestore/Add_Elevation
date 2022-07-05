@@ -1,0 +1,52 @@
+{
+  "settings": [
+    {
+      "id": "adapt_alt",
+      "name": "Adapt altitude",
+      "description": "Select if you want to add an adapted altitude variable to your data. The algorithm will detect your altitude variable by the names partly being 'height' or 'altitude'. The adapted variable will be called as the original one with '.adapted' added to the name.",
+      "defaultValue": false,
+      "type": "CHECKBOX"
+    }
+  ],
+  "dependencies": {
+    "R": [
+      {
+        "name": "move"
+      },
+	  {
+        "name": "sp"
+      },
+	  {
+        "name": "elevtr"
+      }
+    ]
+  },
+  "license": {
+    "key": "MIT"
+  },
+  "language": "eng",
+  "keywords": [
+    "ground elevation",
+    "DEM",
+	"Digital Elevation Model",
+    "true altitude"
+  ],
+  "people": [
+    {
+     "firstName": "Andrea",
+      "middleInitials": null,
+      "lastName": "Kölzsch",
+      "email": "akoelzsch@ab.mpg.de",
+      "roles": [
+        "author",
+        "creator"
+      ],
+      "orcid": "0000-0003-0193-1563",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    }
+  ],
+  "documentation": {
+    "url": "https://github.com/movestore/Add_Elevation/blob/main/README.md"
+  }
+}
