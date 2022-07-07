@@ -3,7 +3,7 @@
     {
       "id": "adapt_alt",
       "name": "Adapt altitude",
-      "description": "Select if you want to add an adapted altitude variable to your data. The algorithm will detect your altitude variable by the names partly being 'height' or 'altitude'. The adapted variable will be called as the original one with '.adapted' added to the name.",
+      "description": "Select if you want to add an adapted altitude variable to your data. The algorithm will detect your altitude variable by the names partly being 'height' or 'altitude'. The adapted variable will be called as the original one with '.adapted' added to the name. In addition output histogrammes with individual adapted altitude distributions and a table with mean and standard deviation adapted altitude per individual and overall will be generated.",
       "defaultValue": false,
       "type": "CHECKBOX"
     }
@@ -17,10 +17,11 @@
         "name": "sp"
       },
 	  {
-        "name": "elevtr"
+        "name": "elevatr"
       }
     ]
   },
+  "createsArtifacts": true,
   "license": {
     "key": "MIT"
   },

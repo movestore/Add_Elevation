@@ -5,12 +5,12 @@ MoveApps
 Github repository: *github.com/movestore/Add_Elevation*
 
 ## Description
-This App annotates all locations with ground elevation (DEM, 30m resolution) and optionally provides corrected height/altitude values. (R package `elevatr`)
+This App annotates all locations with ground elevation (DEM, 30m resolution) and optionally provides corrected height/altitude values and histograms/stats thereof. (R package `elevatr`)
 
 ## Documentation
 Using the R package `elevatr`, this App is appending a ground elevation estimate (DEM) to each location of the data set. We have selected to use DEM from the Amazon Web Services Terrain Tiles at a resolution of 30 m, which is available globally.
 
-In case the `adapt_alt` parameter is set TRUE, the algorithm detects altitude measures in your data (by the phrases `height` or `altitude`) and adapts it by subtracting the DEM estimate from it, i.e. transforming a height above mean sea level to height above ground. Please note that height measurements of any tracking devices have rather large errors.
+In case the `adapt_alt` parameter is set TRUE, the algorithm detects altitude/height measures in your data (by the phrases `height` or `altitude`) and adapts it by subtracting the DEM estimate from it, i.e. transforming a height above mean sea level to height above ground. It then generates a table of mean and sd individual adapted altitudes/heights and histograms. Please note that height measurements of any tracking devices have rather large errors.
 
 ### Input data
 moveStack in Movebank format
