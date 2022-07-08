@@ -1,5 +1,6 @@
 library('move')
 library('sp')
+library('progress')
 library('elevatr')
 
 rFunction <- function(data,adapt_alt=FALSE)

@@ -18,6 +18,9 @@
       },
 	  {
         "name": "elevatr"
+      },
+	  {
+        "name": "progress"
       }
     ]
   },
