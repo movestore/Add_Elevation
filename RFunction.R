@@ -3,7 +3,7 @@ library('sp')
 library('progress')
 library('elevatr')
 
-rFunction <- function(data,adapt_alt=FALSE)
+rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
 {
   Sys.setenv(tz="UTC")
   
@@ -38,14 +38,76 @@ rFunction <- function(data,adapt_alt=FALSE)
           n <- length(ids)
           alt_table <- data.frame("trackId"=c(ids,"all"),"n.pts"=numeric(n+1),"mean.pts.height.adapted"=numeric(n+1),"sd.pts.height.adapted"=numeric(n+1),"mean.dur.height.adapted"=numeric(n+1),"sd.dur.height.adapted"=numeric(n+1))
           
-          pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Histograms_",adap_name,".pdf"),width=12,height=8)
-          lapply(data.split, function(z){
-            topl <- z@data[,adap_name]
-            hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=length(topl)/10,main=paste("Histogramme of", namesIndiv(z)),xlab=adap_name,freq=FALSE,col="blue")
-          })
-          toplA <- data@data[,adap_name]
-          hist(toplA,xlim=c(quantile(toplA,probs=0.01,na.rm=TRUE),quantile(toplA,probs=0.99,na.rm=TRUE)),breaks=length(toplA)/10,main="Histogramme of all tracks",freq=FALSE,col="red",xlab=adap_name)
-          dev.off()
+          if (is.null(height_props)) 
+          {
+            logger.info ("You have not provided any height thresholds. No file for height proportions will be created.")
+            
+            pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Histograms_",adap_name,".pdf"),width=12,height=8)
+            lapply(data.split, function(z){
+              topl <- z@data[,adap_name]
+              hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=length(topl)/10,main=paste("Histogramme of", namesIndiv(z)),xlab=adap_name,freq=FALSE,col="blue")
+            })
+            toplA <- data@data[,adap_name]
+            hist(toplA,xlim=c(quantile(toplA,probs=0.01,na.rm=TRUE),quantile(toplA,probs=0.99,na.rm=TRUE)),breaks=length(toplA)/10,main="Histogramme of all tracks",freq=FALSE,col="red",xlab=adap_name)
+            dev.off()
+            
+          } else
+          {
+            hei_props <- sort(as.numeric(trimws(strsplit(as.character(height_props),",")[[1]])),decreasing=FALSE)
+            n.prop <- length(hei_props)
+            logger.info (paste0("You have provided the following height thresholds: ",paste(hei_props,collapse=", "),". A propotions file will be generated and the histograms' breaks will be adapted to the thresholds."))
+            
+            prop_table <- data.frame("trackId"=rep(c(ids,"mean","sd"),each=n.prop),"height_threshold"=rep(hei_props,times=n+2),"n.loc"=numeric((n+2)*n.prop),"prop.locs"=numeric((n+2)*n.prop),"prop.dur"=numeric((n+2)*n.prop))
+            n.loc <- prop.loc <- prop.dur <- numeric(n.prop)
+            dur <- datai@data$timelag # from TimeLag App
+            
+            for (i in seq(along=data.split))
+            {
+              datai <- data.split[[i]]
+              ix <- which(prop_table$trackId==namesIndiv(datai))
+              hei_adap_i <- datai@data[,adap_name]
+              
+              for (j in seq(along=hei_props))
+              {
+                ixj <- which(hei_adap_i<hei_props[j])
+                n.loc[j] <- length(ixj)
+                prop.loc[j] <- n.loc[j]/length(datai)
+                prop.dur[j] <- sum(dur[ixj],na.rm=TRUE)/sum(dur,na.rm=TRUE)
+              }
+              
+              prop_table[which(prop_table$trackId==namesIndiv(datai)),3:5] <- data.frame(n.loc,prop.loc,prop.dur)
+            }
+            
+          for (k in seq(along=hei_props))
+            {
+              ixk <- which(prop_table$height_threshold==hei_props[k] & prop_table$trackId %in% ids)
+              prop_table[which(prop_table$trackId=="mean" & prop_table$height_threshold==hei_props[k]),3] <- length(prop_table$n.loc[ixk])
+              prop_table[which(prop_table$trackId=="mean" & prop_table$height_threshold==hei_props[k]),4] <- mean(prop_table$prop.loc[ixk])
+              prop_table[which(prop_table$trackId=="mean" & prop_table$height_threshold==hei_props[k]),5] <- mean(prop_table$prop.dur[ixk])
+              
+              prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),3] <- length(prop_table$n.loc[ixk])
+              prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),4] <- sd(prop_table$prop.loc[ixk])
+              prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),5] <- sd(prop_table$prop.dur[ixk])
+            }
+            write.csv(prop_table,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Thr_prop_adap_Altitude.csv"),row.names=FALSE)
+            
+            # adapted breaks for hei_props
+            pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Histograms_",adap_name,".pdf"),width=12,height=8)
+            lapply(data.split, function(z){
+              topl <- z@data[,adap_name]
+              min_topl <- min(topl,na.rm=TRUE)
+              max_topl <- max(topl,na.rm=TRUE)
+              hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=c(min_topl,0,hei_props,max_topl),main=paste("Histogramme of", namesIndiv(z)),xlab=adap_name,freq=FALSE,col="blue")
+            })
+            toplA <- data@data[,adap_name]
+            min_toplA <- min(toplA,na.rm=TRUE)
+            max_toplA <- max(toplA,na.rm=TRUE)
+            hist(toplA,xlim=c(quantile(toplA,probs=0.01,na.rm=TRUE),quantile(toplA,probs=0.99,na.rm=TRUE)),breaks=c(min(toplA,na.rm=TRUE),0,hei_props,max(toplA,na.rm=TRUE)),main="Histogramme of all tracks",freq=FALSE,col="red",xlab=adap_name)
+            dev.off()
+            
+          }
+
+          # now same for both cases
           
           for (i in seq(along=data.split))
           {

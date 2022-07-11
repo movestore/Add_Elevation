@@ -19,12 +19,20 @@ moveStack in Movebank format
 moveStack in Movebank format
 
 ### Artefacts
-none
+`Altitude.adapted.stats.csv`:  table of number of locations, mean and standard deviation adapted height/altitude and (by duration) weighted mean and standard deviation. Values are given per track and overall. (only available if `adapt_alt` is TRUE).
+
+`Histograms_height.above.ellipsoid.adapted.pdf`: histogrammes of altitude/height distribution for each track and overall. If `height_props` are given, the breaks of the histograms are aligned to them, else equidistant (only available if `adapt_alt` is TRUE).
+
+`Thr_prop_adap_Altitude.csv`: table of proportions of locations and durations for each height threshold and track. For each threshold, an average and standard deviation value are given, in addition. (only available if `adapt_alt` is TRUE).
 
 ### Parameters 
 `adapt_alt`: Select if you want to add as additional attribute a DEM adapted height variable. Default FALSE. See details above.
 
+`height_props`: One or more height thresholds (in metre) that you want proportional use calculated for. For multiple values please separate by comma. Default NULL (then no proportional use is calculated).
+
 ### Null or error handling:
 **Parameter `adapt_alt`:** If TRUE, problems can occur if the name of the altitude variable does not contain the phrases 'height' or 'altitude'.
+
+**Parameter `height_props`: ** If NULL (default), no proportional use is calculated and the histograms# breaks become equidistant.
 
 **Data:** The input data set is returned with one or two additional attributes. Should not lead to errors. 

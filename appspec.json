@@ -6,6 +6,13 @@
       "description": "Select if you want to add an adapted altitude variable to your data. The algorithm will detect your altitude variable by the names partly being 'height' or 'altitude'. The adapted variable will be called as the original one with '.adapted' added to the name. In addition output histogrammes with individual adapted altitude distributions and a table with mean and standard deviation adapted altitude per individual and overall will be generated.",
       "defaultValue": false,
       "type": "CHECKBOX"
+    },
+	{
+      "id": "height_props",
+      "name": "Height thresholds for proportional use",
+      "description": "Insert the required adapted heights/altitudes (in metre) for which the usage proportions shall be calculated. Values must be positive. If you want more than one height, enter them in ascending order and seperate by comma. Example: 100,200,300,500. Defaults to NULL (no proportions calculated, histogram breaks regular).",
+      "defaultValue": null,
+      "type": "STRING"
     }
   ],
   "dependencies": {
