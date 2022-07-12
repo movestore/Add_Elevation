@@ -12,6 +12,9 @@ Using the R package `elevatr`, this App is appending a ground elevation estimate
 
 In case the `adapt_alt` parameter is set TRUE, the algorithm detects altitude/height measures in your data (by the phrases `height` or `altitude`) and adapts it by subtracting the DEM estimate from it, i.e. transforming a height above mean sea level to height above ground. It then generates a table of mean and sd individual adapted altitudes/heights and histograms as well as duration adapted mean and sd individual adapted values. Please note that height measurements of any tracking devices have rather large errors.
 
+Ground elevation as well as the adapted height/altittude measure are appended to the input data set and passed on to the next App. Thus, they can be used as attribute parameter there. Furthermore, they can be written as part of the data set to output files if using the rds 2 csv, Write Shapefile, Write GPX or similar Apps.
+
+
 ### Input data
 moveStack in Movebank format
 

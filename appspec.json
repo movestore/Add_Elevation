@@ -40,7 +40,9 @@
     "ground elevation",
     "DEM",
 	"Digital Elevation Model",
-    "true altitude"
+    "true altitude",
+	"adapted altitude",
+	"height above ground"
   ],
   "people": [
     {

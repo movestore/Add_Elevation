@@ -59,20 +59,20 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
             
             prop_table <- data.frame("trackId"=rep(c(ids,"mean","sd"),each=n.prop),"height_threshold"=rep(hei_props,times=n+2),"n.loc"=numeric((n+2)*n.prop),"prop.locs"=numeric((n+2)*n.prop),"prop.dur"=numeric((n+2)*n.prop))
             n.loc <- prop.loc <- prop.dur <- numeric(n.prop)
-            dur <- datai@data$timelag # from TimeLag App
             
             for (i in seq(along=data.split))
             {
               datai <- data.split[[i]]
               ix <- which(prop_table$trackId==namesIndiv(datai))
               hei_adap_i <- datai@data[,adap_name]
+              dur_i <- datai@data$timelag # from TimeLag App
               
               for (j in seq(along=hei_props))
               {
                 ixj <- which(hei_adap_i<hei_props[j])
                 n.loc[j] <- length(ixj)
                 prop.loc[j] <- n.loc[j]/length(datai)
-                prop.dur[j] <- sum(dur[ixj],na.rm=TRUE)/sum(dur,na.rm=TRUE)
+                prop.dur[j] <- sum(dur_i[ixj],na.rm=TRUE)/sum(dur_i,na.rm=TRUE)
               }
               
               prop_table[which(prop_table$trackId==namesIndiv(datai)),3:5] <- data.frame(n.loc,prop.loc,prop.dur)
