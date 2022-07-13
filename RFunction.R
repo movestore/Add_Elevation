@@ -71,8 +71,11 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
               {
                 ixj <- which(hei_adap_i<hei_props[j])
                 n.loc[j] <- length(ixj)
-                prop.loc[j] <- n.loc[j]/length(datai)
-                prop.dur[j] <- sum(dur_i[ixj],na.rm=TRUE)/sum(dur_i,na.rm=TRUE)
+                if (n.loc[j]>0) 
+                  {
+                  prop.loc[j] <- n.loc[j]/length(datai)
+                  prop.dur[j] <- sum(dur_i[ixj],na.rm=TRUE)/sum(dur_i,na.rm=TRUE)
+                } else prop.loc[j] <- prop.dur[j] <- NA
               }
               
               prop_table[which(prop_table$trackId==namesIndiv(datai)),3:5] <- data.frame(n.loc,prop.loc,prop.dur)
@@ -82,12 +85,12 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
             {
               ixk <- which(prop_table$height_threshold==hei_props[k] & prop_table$trackId %in% ids)
               prop_table[which(prop_table$trackId=="mean" & prop_table$height_threshold==hei_props[k]),3] <- length(prop_table$n.loc[ixk])
-              prop_table[which(prop_table$trackId=="mean" & prop_table$height_threshold==hei_props[k]),4] <- mean(prop_table$prop.loc[ixk])
-              prop_table[which(prop_table$trackId=="mean" & prop_table$height_threshold==hei_props[k]),5] <- mean(prop_table$prop.dur[ixk])
+              prop_table[which(prop_table$trackId=="mean" & prop_table$height_threshold==hei_props[k]),4] <- mean(prop_table$prop.loc[ixk],na.rm=TRUE)
+              prop_table[which(prop_table$trackId=="mean" & prop_table$height_threshold==hei_props[k]),5] <- mean(prop_table$prop.dur[ixk],na.rm=TRUE)
               
               prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),3] <- length(prop_table$n.loc[ixk])
-              prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),4] <- sd(prop_table$prop.loc[ixk])
-              prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),5] <- sd(prop_table$prop.dur[ixk])
+              prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),4] <- sd(prop_table$prop.loc[ixk],na.rm=TRUE)
+              prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),5] <- sd(prop_table$prop.dur[ixk],na.rm=TRUE)
             }
             write.csv(prop_table,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Thr_prop_adap_Altitude.csv"),row.names=FALSE)
             
@@ -95,14 +98,20 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
             pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Histograms_",adap_name,".pdf"),width=12,height=8)
             lapply(data.split, function(z){
               topl <- z@data[,adap_name]
-              min_topl <- min(topl,na.rm=TRUE)
-              max_topl <- max(topl,na.rm=TRUE)
-              hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=c(min_topl,0,hei_props,max_topl),main=paste("Histogramme of", namesIndiv(z)),xlab=adap_name,freq=FALSE,col="blue")
+              if (any(!is.na(topl)))
+              {
+                min_topl <- min(topl,na.rm=TRUE)
+                max_topl <- max(topl,na.rm=TRUE)
+                hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=c(min_topl,0,hei_props,max_topl),main=paste("Histogramme of", namesIndiv(z)),xlab=adap_name,freq=FALSE,col="blue")
+              }
             })
             toplA <- data@data[,adap_name]
-            min_toplA <- min(toplA,na.rm=TRUE)
-            max_toplA <- max(toplA,na.rm=TRUE)
-            hist(toplA,xlim=c(quantile(toplA,probs=0.01,na.rm=TRUE),quantile(toplA,probs=0.99,na.rm=TRUE)),breaks=c(min(toplA,na.rm=TRUE),0,hei_props,max(toplA,na.rm=TRUE)),main="Histogramme of all tracks",freq=FALSE,col="red",xlab=adap_name)
+            if (any(!is.na(toplA)))
+            {
+              min_toplA <- min(toplA,na.rm=TRUE)
+              max_toplA <- max(toplA,na.rm=TRUE)
+              hist(toplA,xlim=c(quantile(toplA,probs=0.01,na.rm=TRUE),quantile(toplA,probs=0.99,na.rm=TRUE)),breaks=c(min(toplA,na.rm=TRUE),0,hei_props,max(toplA,na.rm=TRUE)),main="Histogramme of all tracks",freq=FALSE,col="red",xlab=adap_name)
+            }
             dev.off()
             
           }
