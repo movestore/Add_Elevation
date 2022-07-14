@@ -2,7 +2,7 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-inputFileName = "App-Output Workflow_Instance_001__Filter_Data_by_Season__2022-07-04_10-44-59.rds" #important to set to NULL for movebank-download
+inputFileName = "App-Output 2_Life_Track_White_Stork_Bavaria__Segment_Data_by_Speed__2022-07-13_10-06-20.rds" #important to set to NULL for movebank-download
 outputFileName = "output.rds"
 
 args <- list()
@@ -18,7 +18,8 @@ args <- list()
 
 # Add your arguments of your r function here
 args[["adapt_alt"]] <- TRUE
-
+args[["height_props"]] <- "100,200,300,400,500"
+args[["gap_adapt"]] = FALSE #use timelag or timelag2
 
 #################################################################
 #################################################################

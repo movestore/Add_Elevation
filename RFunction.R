@@ -3,9 +3,11 @@ library('sp')
 library('progress')
 library('elevatr')
 
-rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
+rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
 {
   Sys.setenv(tz="UTC")
+  
+  if (gap_adapt==TRUE) TL <- "timelag2" else TL <- "timelag"
   
   data_locs <- data.frame(coordinates(data))
   names(data_locs) <- c("x","y")
@@ -32,8 +34,10 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
           adap_name <- paste0(names(data@data)[hei],".adapted")
           names(data@data)[which(names(data@data)=="hei_adap")] <- adap_name
           logger.info(paste("The variable",names(data)[hei],"was adapted by elevation. The new variable name is called:",adap_name))
-          
+
           data.split <- move::split(data)
+        
+
           ids <- namesIndiv(data)
           n <- length(ids)
           alt_table <- data.frame("trackId"=c(ids,"all"),"n.pts"=numeric(n+1),"mean.pts.height.adapted"=numeric(n+1),"sd.pts.height.adapted"=numeric(n+1),"mean.dur.height.adapted"=numeric(n+1),"sd.dur.height.adapted"=numeric(n+1))
@@ -53,6 +57,8 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
             
           } else
           {
+            if (is.null(data@data[,TL])) logger.info("The variable 'timelag/2' is missing in your data set. Please make sure to run the Time Lag Between Locations App (and Adapt Time Lag for Regular Gaps App) before in your Workflow. Duration weighted height statistics cannot be provided.")
+            
             hei_props <- sort(as.numeric(trimws(strsplit(as.character(height_props),",")[[1]])),decreasing=FALSE)
             n.prop <- length(hei_props)
             logger.info (paste0("You have provided the following height thresholds: ",paste(hei_props,collapse=", "),". A propotions file will be generated and the histograms' breaks will be adapted to the thresholds."))
@@ -65,7 +71,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
               datai <- data.split[[i]]
               ix <- which(prop_table$trackId==namesIndiv(datai))
               hei_adap_i <- datai@data[,adap_name]
-              dur_i <- datai@data$timelag # from TimeLag App
+              dur_i <- datai@data[,TL] # from TimeLag App
               
               for (j in seq(along=hei_props))
               {
@@ -125,7 +131,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
             hei_adap_i <- datai@data[,adap_name]
             alt_table$mean.pts.height.adapted[ix] <- mean(hei_adap_i,na.rm=TRUE)
             alt_table$sd.pts.height.adapted[ix] <- sd(hei_adap_i,na.rm=TRUE)
-            dur_i <- datai@data$timelag # from TimeLag App
+            dur_i <- datai@data[,TL] # from TimeLag App, if night gaps then last day locs adaped above
             mu_i <- sum(hei_adap_i*dur_i,na.rm=TRUE)/sum(dur_i,na.rm=TRUE)
             alt_table$mean.dur.height.adapted[ix] <- mu_i
             alt_table$sd.dur.height.adapted[ix] <- sqrt(sum((hei_adap_i-mu_i)*(hei_adap_i-mu_i)*dur_i,na.rm=TRUE)/sum(dur_i,na.rm=TRUE)) #sqrt(weighted variance)
@@ -134,8 +140,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
 
           alt_table$mean.pts.height.adapted[n+1] <- mean(hei_adap,na.rm=TRUE)
           alt_table$sd.pts.height.adapted[n+1] <- sd(hei_adap,na.rm=TRUE)
-          if (is.null(data@data$timelag)) logger.info("The variable 'timelag' is missing in your data set. Please make sure to run the Time Lag Between Locations App before in your Workflow. Duration weighted height statistics cannot be provided.")
-          dur <- data@data$timelag 
+          dur <- data@data[,TL] 
           mu <- sum(hei_adap*dur,na.rm=TRUE)/sum(dur,na.rm=TRUE)
           alt_table$mean.dur.height.adapted[n+1] <- mu
           alt_table$sd.dur.height.adapted[n+1] <- sqrt(sum((hei_adap-mu)*(hei_adap-mu)*dur,na.rm=TRUE)/sum(dur,na.rm=TRUE))
