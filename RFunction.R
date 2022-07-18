@@ -37,7 +37,6 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
 
           data.split <- move::split(data)
         
-
           ids <- namesIndiv(data)
           n <- length(ids)
           alt_table <- data.frame("trackId"=c(ids,"all"),"n.pts"=numeric(n+1),"mean.pts.height.adapted"=numeric(n+1),"sd.pts.height.adapted"=numeric(n+1),"mean.dur.height.adapted"=numeric(n+1),"sd.dur.height.adapted"=numeric(n+1))
@@ -98,7 +97,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
               prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),4] <- sd(prop_table$prop.loc[ixk],na.rm=TRUE)
               prop_table[which(prop_table$trackId=="sd" & prop_table$height_threshold==hei_props[k]),5] <- sd(prop_table$prop.dur[ixk],na.rm=TRUE)
             }
-            write.csv(prop_table,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Thr_prop_adap_Altitude.csv"),row.names=FALSE)
+            write.csv(prop_table,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Thr_prop_adap_",adap_name,".csv"),row.names=FALSE)
             
             # adapted breaks for hei_props
             pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Histograms_",adap_name,".pdf"),width=12,height=8)
@@ -145,7 +144,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
           alt_table$mean.dur.height.adapted[n+1] <- mu
           alt_table$sd.dur.height.adapted[n+1] <- sqrt(sum((hei_adap-mu)*(hei_adap-mu)*dur,na.rm=TRUE)/sum(dur,na.rm=TRUE))
           alt_table$n.pts[n+1] <- length(hei_adap[!is.na(hei_adap)])
-          write.csv(alt_table,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Altitude.adapted.stats.csv"),row.names=FALSE)
+          write.csv(alt_table,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "Adapted.stats",adap_name,".csv"),row.names=FALSE)
         }
       }
     } else logger.info("There are no height or altitude variables in your data set.")
