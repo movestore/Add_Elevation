@@ -9,7 +9,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
   
   if (gap_adapt==TRUE) TL <- "timelag2" else TL <- "timelag"
 
-  data$ground.elevation<-get_elev_point(data, src="aws")
+  data$ground.elevation<-get_elev_point(data, src="aws")$elevation
   logger.info("The variable ground.elevation was added to your data.")
   
   if (adapt_alt==TRUE)
