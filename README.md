@@ -41,6 +41,6 @@ moveStack in Movebank format
 ### Null or error handling:
 **Parameter `adapt_alt`:** If TRUE, problems can occur if the name of the altitude variable does not contain the phrases 'height' or 'altitude'.
 
-**Parameter `height_props`: ** If NULL (default), no proportional use is calculated and the histograms# breaks become equidistant.
+**Parameter `height_props`:** If NULL (default), no proportional use is calculated and the histograms# breaks become equidistant.
 
 **Data:** The input data set is returned with one or two additional attributes. Should not lead to errors. 
