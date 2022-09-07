@@ -5,12 +5,14 @@ MoveApps
 Github repository: *github.com/movestore/Add_Elevation*
 
 ## Description
-This App annotates all locations with ground elevation (DEM, 30m resolution) and optionally provides corrected height/altitude values and histograms/stats thereof. (R package `elevatr`)
+This App annotates all locations with ground elevation (DEM, 30m resolution) and optionally provides corrected height/altitude values and histograms/stats thereof. Careful if using height above ellipsoid, there is no adaption included yet. (R package `elevatr`)
 
 ## Documentation
 Using the R package `elevatr`, this App is appending a ground elevation estimate (DEM) to each location of the data set. We have selected to use DEM from the Amazon Web Services Terrain Tiles at a resolution of 30 m, which is available globally.
 
 In case the `adapt_alt` parameter is set TRUE, the algorithm detects altitude/height measures in your data (by the phrases `height` or `altitude`) and adapts it by subtracting the DEM estimate from it, i.e. transforming a height above mean sea level to height above ground. It then generates a table of mean and sd individual adapted altitudes/heights and histograms as well as duration adapted mean and sd individual adapted values. Please note that height measurements of any tracking devices have rather large errors.
+
+Note that if your data contain height above ellispoid, they will be used in this App, but height above ground is not adapted to it. It is planned to update this App with such a functionality. Mean sea level height can be calculated as height above ellipsoid minus the interpolated geoid height at the specified location. Geoid height is a complex value that differs by region, but can be obtained from the [Earth Gravitational Model 2008 (EGM2008)](https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008). 
 
 Ground elevation as well as the adapted height/altittude measure are appended to the input data set and passed on to the next App. Thus, they can be used as attribute parameter there. Furthermore, they can be written as part of the data set to output files if using the rds 2 csv, Write Shapefile, Write GPX or similar Apps.
 
