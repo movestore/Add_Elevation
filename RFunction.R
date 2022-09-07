@@ -8,13 +8,8 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
   Sys.setenv(tz="UTC")
   
   if (gap_adapt==TRUE) TL <- "timelag2" else TL <- "timelag"
-  
-  data_locs <- data.frame(coordinates(data))
-  names(data_locs) <- c("x","y")
-  
-  elev <- get_elev_point(data_locs, prj = projection(data), src = "aws")$elevation
-  
-  data@data <- cbind(data@data,"ground.elevation"=elev)
+
+  data$ground.elevation<-get_elev_point(data, src="aws")$elevation
   logger.info("The variable ground.elevation was added to your data.")
   
   if (adapt_alt==TRUE)
