@@ -45,7 +45,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
               topl <- z@data[,adap_name]
               if(all(is.na(topl))){
                 logger.info(paste("There are no altitudes annotated for", rownames(idData(data)),", therefore no histogram is produced for this individual."))
-                return(T)
+                return(NULL)
               }
               hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=length(topl)/10,main=paste("Histogramme of", namesIndiv(z)),xlab=adap_name,freq=FALSE,col="blue")
             })
