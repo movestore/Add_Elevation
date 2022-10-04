@@ -2,7 +2,7 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-inputFileName = "App-Output 2015__Filter_Data_by_Space__2022-07-25_10-40-03.rds" #important to set to NULL for movebank-download
+inputFileName = "App-Output 2_Life_Track_White_Stork_Bavaria__Segment_Data_by_Speed__2022-07-13_10-06-20.rds" #important to set to NULL for movebank-download
 outputFileName = "output.rds"
 
 args <- list()
@@ -17,7 +17,7 @@ args <- list()
 #    args[["password"]] = "any-password"
 
 # Add your arguments of your r function here
-args[["adapt_alt"]] <- FALSE
+args[["adapt_alt"]] <- TRUE
 args[["height_props"]] <- "100,200,300,400,500"
 args[["gap_adapt"]] = FALSE #use timelag or timelag2
 

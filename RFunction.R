@@ -106,7 +106,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
               {
                 min_topl <- min(topl,na.rm=TRUE)
                 max_topl <- max(topl,na.rm=TRUE)
-                hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=c(min_topl,0,hei_props,max_topl),main=paste("Histogramme of", namesIndiv(z)),xlab=adap_name,freq=FALSE,col="blue")
+                hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=c(min_topl,0,hei_props,max_topl),main=paste("Histogramme of", namesIndiv(z)),xlab=adap_name,freq=FALSE,col="blue",ylab="Probability density")
               }
             })
             toplA <- data@data[,adap_name]
@@ -114,7 +114,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,gap_adapt=FALSE)
             {
               min_toplA <- min(toplA,na.rm=TRUE)
               max_toplA <- max(toplA,na.rm=TRUE)
-              hist(toplA,xlim=c(quantile(toplA,probs=0.01,na.rm=TRUE),quantile(toplA,probs=0.99,na.rm=TRUE)),breaks=c(min(toplA,na.rm=TRUE),0,hei_props,max(toplA,na.rm=TRUE)),main="Histogramme of all tracks",freq=FALSE,col="red",xlab=adap_name)
+              hist(toplA,xlim=c(quantile(toplA,probs=0.01,na.rm=TRUE),quantile(toplA,probs=0.99,na.rm=TRUE)),breaks=c(min(toplA,na.rm=TRUE),0,hei_props,max(toplA,na.rm=TRUE)),main="Histogramme of all tracks",freq=FALSE,col="red",xlab=adap_name,ylab="Probability density")
             }
             dev.off()
             
