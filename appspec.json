@@ -13,13 +13,6 @@
       "description": "Insert the required adapted heights/altitudes (in metre) for which the usage proportions shall be calculated. Values must be positive. If you want more than one height, enter them in ascending order and seperate by comma. Example: 100,200,300,500. Defaults to NULL (no proportions calculated, histogram breaks regular).",
       "defaultValue": null,
       "type": "STRING"
-    },
-	{
-      "id": "gap_adapt",
-      "name": "Adapt duration stats for regular data gaps?",
-      "description": "If your data were collected with a regular daily gap (e.g. no locations at night), it might be useful to work with the adapted timelag2 that is weighting the last location before the gap with the median data resolution instead of the long gap time interval. Depending on your required data property and how the animal(s) behave during the gap (e.g. night - flying or not?) either one or the other might be sensible. Note that (in addition to the Time Lag Between Locations App) you need to add the Adapt Time Lag for Regular Gaps App to your workflow before, if you want to use this feature.",
-      "defaultValue": false,
-      "type": "CHECKBOX"
     }
   ],
   "dependencies": {

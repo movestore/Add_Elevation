@@ -19,7 +19,6 @@ args <- list()
 # Add your arguments of your r function here
 args[["adapt_alt"]] <- TRUE
 args[["height_props"]] <- "100,200,300,400,500"
-args[["gap_adapt"]] = FALSE #use timelag or timelag2
 
 #################################################################
 #################################################################
