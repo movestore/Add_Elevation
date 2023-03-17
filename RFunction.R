@@ -2,13 +2,19 @@ library('move')
 library('sp')
 library('progress')
 library('elevatr')
+library('terra')
 
-rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
+rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
 {
   Sys.setenv(tz="UTC")
   
   data$ground.elevation<-get_elev_point(data, src="aws")$elevation
   logger.info("The variable ground.elevation was added to your data.")
+  
+  #geoid <- terra::rast('us_nga_egm2008_1.tif')
+  geoid <- terra::rast(paste0(getAppFilePath("egm08_geoid"),"us_nga_egm2008_1.tif"))
+  ann <- terra::extract(geoid,data.frame(coordinates(data)))
+  data$egm08.geoid <- ann$us_nga_egm2008_1
   
   if (adapt_alt==TRUE)
   {
@@ -22,7 +28,15 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL)
       {
         if (all(is.na(data@data[hei]))) logger.info(paste("The variable",names(data)[hei],"contains only NA values. Therefore, no elevation-adapted variable is calculated.")) else
         {
-          hei_adap <- data@data[,hei] - data@data$ground.elevation
+          if (ellipsoid==FALSE)
+            {
+              hei_adap <- data@data[,hei] - data@data$ground.elevation
+              logger.info("You have selected that your data are height above mean sea level, so no geoid adaption was performed.")
+            } else 
+            {
+              hei_adap <- data@data[,hei] - data@data$ground.elevation + data@data$egm08.geoid
+              logger.info("You have selected that your data are height above ellipsoid, so geoid adaptation (using the EGM2008 model) was performed for true heights.")
+            }
           data@data <- cbind(data@data,hei_adap)
           adap_name <- paste0(names(data@data)[hei],".adapted")
           names(data@data)[which(names(data@data)=="hei_adap")] <- adap_name

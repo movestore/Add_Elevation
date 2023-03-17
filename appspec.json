@@ -8,11 +8,24 @@
       "type": "CHECKBOX"
     },
 	{
+      "id": "ellipsoid",
+      "name": "Adapt for height above ellipsoid",
+      "description": "Select if your tracks contain height above ellipsoid measurements. Then the adapted altitude for all locations will also include an addition of local geoid height. For geoid height, 1 degree EGM2008 model values are used (see https://www.agisoft.com/downloads/geoids/)",
+      "defaultValue": false,
+      "type": "CHECKBOX"
+    },
+	{
       "id": "height_props",
       "name": "Height thresholds for proportional use",
       "description": "Insert the required adapted heights/altitudes (in metre) for which the usage proportions shall be calculated. Values must be positive. If you want more than one height, enter them in ascending order and seperate by comma. Example: 100,200,300,500. Defaults to NULL (no proportions calculated, histogram breaks regular).",
       "defaultValue": null,
       "type": "STRING"
+    },
+  ],
+  "providedAppFiles": [
+    {
+      "settingId": "egm08_geoid",
+      "from": "provided-app-files/egm08_geoid"
     }
   ],
   "dependencies": {
@@ -28,6 +41,9 @@
       },
 	  {
         "name": "progress"
+      },
+	  {
+        "name": "terra"
       }
     ]
   },
@@ -42,7 +58,9 @@
 	"Digital Elevation Model",
     "true altitude",
 	"adapted altitude",
-	"height above ground"
+	"height above ground",
+	"geoid",
+	"EGM2008"
   ],
   "people": [
     {
