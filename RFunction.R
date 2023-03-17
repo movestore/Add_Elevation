@@ -11,8 +11,7 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
   data$ground.elevation<-get_elev_point(data, src="aws")$elevation
   logger.info("The variable ground.elevation was added to your data.")
   
-  #geoid <- terra::rast('us_nga_egm2008_1.tif')
-  geoid <- terra::rast(paste0(getAppFilePath("egm08_geoid"),"us_nga_egm2008_1.tif"))
+  geoid <- terra::rast('us_nga_egm2008_1.tif')
   ann <- terra::extract(geoid,data.frame(coordinates(data)))
   data$egm08.geoid <- ann$us_nga_egm2008_1
   

@@ -22,12 +22,6 @@
       "type": "STRING"
     },
   ],
-  "providedAppFiles": [
-    {
-      "settingId": "egm08_geoid",
-      "from": "provided-app-files/egm08_geoid"
-    }
-  ],
   "dependencies": {
     "R": [
       {
