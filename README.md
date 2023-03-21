@@ -5,7 +5,7 @@ MoveApps
 Github repository: *github.com/movestore/Add_Elevation*
 
 ## Description
-This App annotates all locations with ground elevation (DEM, 30m resolution) and optionally provides corrected height/altitude values and histograms/stats thereof. Careful if using height above ellipsoid, there is no adaption included yet. (R package `elevatr`)
+This App annotates all locations with ground elevation (DEM, 30m resolution) and optionally provides corrected height/altitude values and histograms/stats thereof. Height above ellipsoid can additionally be adapted by geoid height (EGM2008). (R package `elevatr`)
 
 ## Documentation
 Using the R package `elevatr`, this App appends a ground elevation estimate (DEM) to each location of the data set. We have selected to use DEM from the Amazon Web Services Terrain Tiles at a resolution of 30 m, which is available globally.
