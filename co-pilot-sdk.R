@@ -4,7 +4,7 @@
 ## Provided testing datasets in `./data/raw`: 
 ## "input1_pigeons.rds", "input2_geese.rds", "input3_stork.rds", "input4_goat.rds"  
 ## for own data: file saved as a .rds containing a object of class MoveStack
-inputFileName = "App-Output 2_Life_Track_White_Stork_Bavaria__Segment_Data_by_Speed__2022-07-13_10-06-20.rds" 
+inputFileName = "Workflow_Instance_001__Time_Lag_Between_Locations__2023-03-21_07-18-51.rds" 
 
 ## optionally change the output file name
 unlink("./data/output/", recursive = TRUE)
