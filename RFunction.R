@@ -8,7 +8,8 @@ rFunction <- function(data,adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
 {
   Sys.setenv(tz="UTC")
   
-  data$ground.elevation<-get_elev_point(data, src="aws")$elevation
+  data$ground.elevation<-get_elev_point(SpatialPoints(coordinates(data)), projection(data), src="aws")$elevation
+  #get_elev_point(data, src="aws")$elevation
   logger.info("The variable ground.elevation was added to your data.")
   
   geoid <- terra::rast('us_nga_egm2008_1.tif')
