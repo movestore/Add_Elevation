@@ -25,10 +25,10 @@
   "dependencies": {
     "R": [
       {
-        "name": "move"
+        "name": "move2"
       },
 	  {
-        "name": "sp"
+        "name": "sf"
       },
 	  {
         "name": "elevatr"
