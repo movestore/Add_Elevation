@@ -22,6 +22,12 @@
       "type": "STRING"
     },
   ],
+  "providedAppFiles": [
+    {
+      "settingId": "egm_file",
+      "from": "data/local_app_files/provided-app-files/egm_file/"
+    }
+  ],
   "dependencies": {
     "R": [
       {
