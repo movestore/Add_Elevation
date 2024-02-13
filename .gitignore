@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+data/output/**
+!data/output/.keep
+old_files_move1
+us_nga_egm2008_1.tif

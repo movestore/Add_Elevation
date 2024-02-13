@@ -19,10 +19,10 @@ Ground elevation, EGM2008 geoid height as well as the adapted height/altitude me
 It is necessary to include the Time Lag Between Locations App before this App in the workflow.
 
 ### Input data
-moveStack in Movebank format
+move2_location object
 
 ### Output data
-moveStack in Movebank format
+move2_location object
 
 ### Artefacts
 `Altitude.adapted.stats.csv`:  table of number of locations, mean and standard deviation adapted height/altitude and (by duration) weighted mean and standard deviation. Values are given per track and overall. (only available if `adapt_alt` is TRUE).
@@ -30,8 +30,6 @@ moveStack in Movebank format
 `Histograms_height.above.ellipsoid.adapted.pdf`: histogrammes of altitude/height distribution for each track and overall. If `height_props` are given, the breaks of the histograms are aligned to them, else equidistant (only available if `adapt_alt` is TRUE).
 
 `Thr_prop_adap_Altitude.csv`: table of proportions of locations and durations for each height threshold and track. For each threshold, an average and standard deviation value are given, in addition. (only available if `adapt_alt` is TRUE).
-
-`last_loctime`: Select this option if your data were collected with a regular daily gap (e.g. no locations at night). This leads the App to calculate duration weighted altitudes/heights using the adapted `timelag2` that is weighting the last location before the gap with the median data resolution instead of the long gap time interval. Depending on your required data property and how the animal(s) behave during the gap (e.g. night - flying or not?) either one or the other might be sensible. Note that (in addition to the Time Lag Between Locations App) you need to add the Adapt Time Lag for Regular Gaps App to your workflow before, if you want to use this feature.
 
 ### Settings 
 **Adapt altitude (`adapt_alt`):** Select if you want to add a DEM adapted height variable as an additional attribute. Default FALSE. See details above.

@@ -2,15 +2,15 @@
   "settings": [
     {
       "id": "adapt_alt",
-      "name": "Adapt altitude",
-      "description": "Select if you want to add an adapted altitude variable to your data. The algorithm will detect your altitude variable by the names partly being 'height' or 'altitude'. The adapted variable will be called as the original one with '.adapted' added to the name. In addition output histogrammes with individual adapted altitude distributions and a table with mean and standard deviation adapted altitude per individual and overall will be generated.",
+      "name": "Adapt altitude - i.e. calulate height above ground",
+      "description": "Select if you want to add an adapted altitude variable to your data. This will technically calculate height above ground (by subtracting the altitude of the animal (derived from the tag) from the ground elevation.). The algorithm will detect your altitude variable by the names partly being 'height' or 'altitude'. The adapted variable will be called as the original one with '.adapted' added to the name. In addition, output histogrammes with individual adapted altitude distributions and a table with mean and standard deviation adapted altitude per individual and overall will be generated.",
       "defaultValue": false,
       "type": "CHECKBOX"
     },
 	{
       "id": "ellipsoid",
       "name": "Adapt for height above ellipsoid",
-      "description": "Select if your tracks contain height above ellipsoid measurements. Then the adapted altitude for all locations will also include an addition of local geoid height. For geoid height, 1 degree EGM2008 model values are used (see https://www.agisoft.com/downloads/geoids/)",
+      "description": "Select if your tracks contain height above ellipsoid measurements. Then the adapted altitude (height above ground) for all locations will also include an addition of local geoid height. For geoid height, 1 degree EGM2008 model values are used (see https://www.agisoft.com/downloads/geoids/).",
       "defaultValue": false,
       "type": "CHECKBOX"
     },
@@ -25,10 +25,10 @@
   "dependencies": {
     "R": [
       {
-        "name": "move"
+        "name": "move2"
       },
 	  {
-        "name": "sp"
+        "name": "sf"
       },
 	  {
         "name": "elevatr"
