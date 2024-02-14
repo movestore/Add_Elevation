@@ -8,15 +8,18 @@ library('terra')
 
 rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE) 
   {
-  data$ground.elevation<-get_elev_point(data, crs(data), src="aws")$elevation
+  locs <- as.data.frame(st_coordinates(data))
+  names(locs) <- c("x","y")
+  locs_sf <- st_as_sf(x=locs,coords=c("x","y"), crs=st_crs(data))
+  
+  data$ground.elevation<-get_elev_point(locs_sf, st_crs(data), src="aws")$elevation
   #get_elev_point(data, src="aws")$elevation
   logger.info("The variable ground.elevation was added to your data.")
   
   egm.file.path <- paste0(getAppFilePath("egm_file"),"us_nga_egm2008_1.tif")
   geoid <- terra::rast(egm.file.path)
-  locs <- as.data.frame(st_coordinates(data))
-  names(locs) <- c("lon","lat")
-  ann <- terra::extract(geoid,locs)
+
+  ann <- terra::extract(geoid,locs_sf)
   data$egm08.geoid <- ann$us_nga_egm2008_1
   logger.info("The variable egm08.geoid was added to your data.")
   
