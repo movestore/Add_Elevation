@@ -14,7 +14,9 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
   
   egm.file.path <- paste0(getAppFilePath("egm_file"),"us_nga_egm2008_1.tif")
   geoid <- terra::rast(egm.file.path)
-  ann <- terra::extract(geoid,data.frame(st_coordinates(data)))
+  locs <- as.data.frame(st_coordinates(data))
+  names(locs) <- c("lon","lat")
+  ann <- terra::extract(geoid,locs)
   data$egm08.geoid <- ann$us_nga_egm2008_1
   logger.info("The variable egm08.geoid was added to your data.")
   

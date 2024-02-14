@@ -1,5 +1,5 @@
 {
-    "adapt_alt": false,
-    "height_props": null,
+    "adapt_alt": true,
+    "height_props": "500",
     "ellipsoid": true
 }
