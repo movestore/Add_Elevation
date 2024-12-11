@@ -3,6 +3,7 @@ library('sf')
 library('progress')
 library('elevatr')
 library('terra')
+library('units')
 
 #need to update all to move2
 
@@ -13,15 +14,18 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
   locs_sf <- st_as_sf(x=locs,coords=c("x","y"), crs=st_crs(data))
   
   data$ground.elevation<-get_elev_point(locs_sf, st_crs(data), src="aws")$elevation
+  units(data$ground.elevation) <- "m"
+  
   #get_elev_point(data, src="aws")$elevation
-  logger.info("The variable ground.elevation was added to your data.")
+  logger.info("The variable ground.elevation in metre was added to your data.")
   
   egm.file.path <- paste0(getAppFilePath("egm_file"),"us_nga_egm2008_1.tif")
   geoid <- terra::rast(egm.file.path)
 
   ann <- terra::extract(geoid,locs_sf)
   data$egm08.geoid <- ann$us_nga_egm2008_1
-  logger.info("The variable egm08.geoid was added to your data.")
+  units(data$egm08.geoid) <- "m"
+  logger.info("The variable egm08.geoid in metre was added to your data. This will only be used for adaption if your tracks provide height above ellipsoid.")
   
   if (adapt_alt==TRUE)
   {
@@ -33,6 +37,7 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
     {
       for (hei in hei_ix)
       {
+        #data_hei <- eval(parse(text=paste("data$",names(data)[hei])))
         if (all(is.na(data[[hei]]))) logger.info(paste("The variable",names(data)[hei],"contains only NA values. Therefore, no elevation-adapted variable is calculated.")) else
         {
           if (ellipsoid==FALSE)
@@ -42,9 +47,9 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
           } else 
           {
             hei_adap <- data[[hei]] - data$ground.elevation + data$egm08.geoid
-            logger.info("You have selected that your data are height above ellipsoid, so geoid adaptation (using the EGM2008 model) was performed for true heights.")
           }
           data$hei_adap<- hei_adap
+          units(data$hei_adap) <- "m"
           adap_name <- paste0(names(data)[hei],".adapted")
           names(data)[which(names(data)=="hei_adap")] <- adap_name
           logger.info(paste("The variable",names(data)[hei],"was adapted by elevation. The new variable is called:",adap_name))
@@ -61,14 +66,14 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
             
             pdf(appArtifactPath(paste0("Histograms_",adap_name,".pdf")),width=12,height=8)
             lapply(data.split, function(z){
-              topl <- z[[adap_name]]
+              topl <- as.numeric(z[[adap_name]])
               if(all(is.na(topl))){
                 logger.info(paste0("There are no altitudes annotated for ", unique(mt_track_id(z))," (all NA), therefore no histogram is produced for this individual."))
                 return(NULL)
               }
               hist(topl,xlim=c(quantile(topl,probs=0.01,na.rm=TRUE),quantile(topl,probs=0.99,na.rm=TRUE)),breaks=length(topl)/10,main=paste("Histogramme of", unique(mt_track_id(z))),xlab=adap_name,freq=FALSE,col="blue")
             })
-            toplA <- data[[,adap_name]]
+            toplA <- data[[adap_name]]
             hist(toplA,xlim=c(quantile(toplA,probs=0.01,na.rm=TRUE),quantile(toplA,probs=0.99,na.rm=TRUE)),breaks=length(toplA)/10,main="Histogramme of all tracks",freq=FALSE,col="red",xlab=adap_name)
             dev.off()
             
@@ -87,7 +92,7 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
             {
               datai <- data.split[[i]]
               ix <- which(prop_table$track==unique(mt_track_id(datai)))
-              hei_adap_i <- datai[[adap_name]]
+              hei_adap_i <- as.numeric(datai[[adap_name]])
               if(any(names(data)=="timelag")) dur_i <- datai$timelag # from TimeLag App
               
               for (j in seq(along=hei_props))
