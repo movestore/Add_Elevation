@@ -14,7 +14,7 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
   locs_sf <- st_as_sf(x=locs,coords=c("x","y"), crs=st_crs(data))
   
   data$ground.elevation<-get_elev_point(locs_sf, st_crs(data), src="aws")$elevation
-  units(data$ground.elevation) <- "m"
+  if (!is.null(data$ground.elevation)) units(data$ground.elevation) <- "m"
   
   #get_elev_point(data, src="aws")$elevation
   logger.info("The variable ground.elevation in metre was added to your data.")
@@ -23,8 +23,9 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
   geoid <- terra::rast(egm.file.path)
 
   ann <- terra::extract(geoid,locs_sf)
+  print(names(ann))
   data$egm08.geoid <- ann$us_nga_egm2008_1
-  units(data$egm08.geoid) <- "m"
+  if (!is.null(data$egm08.geoid)) units(data$egm08.geoid) <- "m"
   logger.info("The variable egm08.geoid in metre was added to your data. This will only be used for adaption if your tracks provide height above ellipsoid.")
   
   if (adapt_alt==TRUE)
@@ -49,7 +50,7 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
             hei_adap <- data[[hei]] - data$ground.elevation + data$egm08.geoid
           }
           data$hei_adap<- hei_adap
-          units(data$hei_adap) <- "m"
+          if(!is.null(data$hei_adap)) units(data$hei_adap) <- "m"
           adap_name <- paste0(names(data)[hei],".adapted")
           names(data)[which(names(data)=="hei_adap")] <- adap_name
           logger.info(paste("The variable",names(data)[hei],"was adapted by elevation. The new variable is called:",adap_name))
