@@ -46,3 +46,6 @@ move2_location object
 **Height thresholds for proportional use (`height_props`):** If NULL (default), no proportional use is calculated and the histogram breaks become equidistant.
 
 **Data:** The input data set is returned with one or two additional attributes. Should not lead to errors. 
+
+
+
