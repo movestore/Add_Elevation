@@ -41,13 +41,15 @@ rFunction = function(data, adapt_alt=FALSE,height_props=NULL,ellipsoid=FALSE)
         #data_hei <- eval(parse(text=paste("data$",names(data)[hei])))
         if (all(is.na(data[[hei]]))) logger.info(paste("The variable",names(data)[hei],"contains only NA values. Therefore, no elevation-adapted variable is calculated.")) else
         {
+          hei_0 <- as.numeric(data[[hei]])
+          units(hei_0) <- "m"
           if (ellipsoid==FALSE)
           {
-            hei_adap <- data[[hei]] - data$ground.elevation
+            hei_adap <- hei_0 - data$ground.elevation
             logger.info("You have selected that your data are height above mean sea level, so no geoid adaption was performed.")
           } else 
           {
-            hei_adap <- data[[hei]] - data$ground.elevation + data$egm08.geoid
+            hei_adap <- hei_0 - data$ground.elevation + data$egm08.geoid
           }
           data$hei_adap<- hei_adap
           units(data$hei_adap) <- "m"
